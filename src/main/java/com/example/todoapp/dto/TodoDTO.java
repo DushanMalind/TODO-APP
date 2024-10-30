@@ -1,5 +1,7 @@
 package com.example.todoapp.dto;
 
+import lombok.Data;
+
 import java.util.Date;
 
 /**
@@ -10,6 +12,7 @@ import java.util.Date;
  * Todo-App
  * com.example.todoapp.dto
  */
+@Data
 public class TodoDTO {
     private String title;
     private String description;
