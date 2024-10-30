@@ -1,6 +1,7 @@
 package com.example.todoapp.service;
 
 import com.example.todoapp.dto.UserDTO;
+import com.example.todoapp.entity.User;
 
 /**
  * `@authority` DUSHAN MALINDA
@@ -12,4 +13,6 @@ import com.example.todoapp.dto.UserDTO;
  */
 public interface UserService {
     int saveUser(UserDTO userDTO);
+    User findByEmail(String email);
+
 }
