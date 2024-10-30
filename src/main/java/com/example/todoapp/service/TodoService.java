@@ -5,6 +5,7 @@ import com.example.todoapp.entity.Todo;
 import com.example.todoapp.entity.User;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * `@authority` DUSHAN MALINDA
@@ -17,6 +18,6 @@ import java.util.List;
 public interface TodoService {
     Todo createTodo(TodoDTO todoDTO, User user);
     List<Todo> getTodos(User user);
-    Todo updateTodo(Long id, TodoDTO todoDTO, User user);
-    void deleteTodo(Long id, User user);
+    Todo updateTodo(UUID id, TodoDTO todoDTO, User user);
+    void deleteTodo(UUID id, User user);
 }
