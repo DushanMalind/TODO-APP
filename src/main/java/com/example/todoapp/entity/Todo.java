@@ -3,7 +3,7 @@ package com.example.todoapp.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -27,7 +27,7 @@ public class Todo {
     private String description;
     private Boolean completed;
     private String priority;
-    private LocalDateTime dueDate;
+    private Date dueDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
