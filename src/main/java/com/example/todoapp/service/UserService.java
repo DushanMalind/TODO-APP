@@ -10,6 +10,6 @@ import com.example.todoapp.dto.UserDTO;
  * Todo-App
  * com.example.todoapp.service
  */
-public interface userService {
+public interface UserService {
     int saveUser(UserDTO userDTO);
 }
