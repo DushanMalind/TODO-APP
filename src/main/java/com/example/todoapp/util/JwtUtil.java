@@ -1,5 +1,6 @@
 package com.example.todoapp.util;
 
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +33,15 @@ public class JwtUtil {
 
     public String getEmailFromToken(String token){
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public boolean validateToken(String token){
+        try{
+            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+            return true;
+        }catch (JwtException e){
+            return false;
+        }
     }
 
 }
