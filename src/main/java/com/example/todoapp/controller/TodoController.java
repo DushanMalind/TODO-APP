@@ -8,6 +8,9 @@ import com.example.todoapp.service.impl.TodoServiceImpl;
 import com.example.todoapp.service.impl.UserServiceImpl;
 import com.example.todoapp.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,6 +61,29 @@ public class TodoController {
             throw new UnauthorizedException("Unauthorized access: Invalid token or user not found");
         }
     }
+
+    @GetMapping("/page")
+    public ResponseEntity<Page<Todo>> getTodosByPage(@RequestHeader("Authorization") String token,
+                                                     @PageableDefault(size = 10) Pageable pageable) {
+        String email = getEmailFromToken(token.substring(7));
+        User user = userService.findByEmail(email);
+        return ResponseEntity.ok(todoService.getTodosByPage(user, pageable));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Todo>> searchTodos(@RequestHeader("Authorization") String token,
+                                                  @RequestParam String keyword) {
+        try {
+            String email = getEmailFromToken(token.substring(7)); // Assumes "Bearer " prefix
+            User user = userService.findByEmail(email);
+            List<Todo> todos = todoService.searchTodos(user, keyword);
+            return ResponseEntity.ok(todos);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(List.of());
+        }
+    }
+
 
     @PutMapping("/update/{id}")
     public Todo updateTodo(@RequestHeader("Authorization") String token, @PathVariable UUID id, @RequestBody TodoDTO todoDTO) {

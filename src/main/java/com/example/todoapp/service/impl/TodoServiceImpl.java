@@ -9,6 +9,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -67,5 +69,15 @@ public class TodoServiceImpl implements TodoService {
         if (todo.getUser().getId().equals(user.getId())) {
             todoRepository.delete(todo);
         }
+    }
+
+    @Override
+    public Page<Todo> getTodosByPage(User user, Pageable pageable) {
+        return todoRepository.findByUser(user, pageable);
+    }
+
+    @Override
+    public List<Todo> searchTodos(User user, String keyword) {
+        return todoRepository.findByTitleContainingAndUser(keyword, user);
     }
 }
