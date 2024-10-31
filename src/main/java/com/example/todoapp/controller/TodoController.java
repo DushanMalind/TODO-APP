@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * `@authority` DUSHAN MALINDA
  * 14:26
@@ -43,6 +45,21 @@ public class TodoController {
            throw new UnauthorizedException("Unauthorized access: Invalid token or user not found");
        }
     }
+
+    @GetMapping("/get")
+    public List<Todo> getTodos(@RequestHeader("Authorization") String token) {
+        try {
+            String email = getEmailFromToken(token.substring(7));
+            User user = userService.findByEmail(email);
+            return todoService.getTodos(user);
+        } catch (Exception e) {
+            System.out.println("Exception occurred: " + e.getMessage());
+            throw new UnauthorizedException("Unauthorized access: Invalid token or user not found");
+        }
+    }
+
+
+
     /*@PostMapping("/add")
     public ResponseEntity<Todo> createTodo(@RequestHeader("Authorization") String token, @RequestBody TodoDTO todoDTO) {
         try {
