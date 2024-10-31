@@ -66,7 +66,12 @@ public class TodoController {
         return todoService.updateTodo(id, todoDTO, user);
     }
 
-
+    @DeleteMapping("/delete/{id}")
+    public void deleteTodo(@RequestHeader("Authorization") String token, @PathVariable UUID id) {
+        String email = getEmailFromToken(token);
+        User user = userService.findByEmail(email);
+        todoService.deleteTodo(id, user);
+    }
 
 
     /*@PostMapping("/add")
