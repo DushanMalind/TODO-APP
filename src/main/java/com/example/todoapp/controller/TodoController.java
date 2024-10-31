@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * `@authority` DUSHAN MALINDA
@@ -57,6 +58,14 @@ public class TodoController {
             throw new UnauthorizedException("Unauthorized access: Invalid token or user not found");
         }
     }
+
+    @PutMapping("/update/{id}")
+    public Todo updateTodo(@RequestHeader("Authorization") String token, @PathVariable UUID id, @RequestBody TodoDTO todoDTO) {
+        String email = getEmailFromToken(token);
+        User user = userService.findByEmail(email);
+        return todoService.updateTodo(id, todoDTO, user);
+    }
+
 
 
 
