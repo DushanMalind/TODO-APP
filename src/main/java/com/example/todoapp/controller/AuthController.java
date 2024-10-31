@@ -29,29 +29,41 @@ public class AuthController {
 
     @PostMapping("/register")
     public AuthResponse register(@RequestBody AuthRequest authRequest) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setEmail(authRequest.getEmail());
-        userDTO.setPassword(authRequest.getPassword());
+       try {
+           UserDTO userDTO = new UserDTO();
+           userDTO.setEmail(authRequest.getEmail());
+           userDTO.setPassword(authRequest.getPassword());
 
-        int userId = userService.saveUser(userDTO);
-        if (userId == 0) {
-            throw new RuntimeException("User registration failed");
-        }
-        // Generate token using email
-        String token = jwtUtil.generateToken(authRequest.getEmail());
-        System.out.println("Token: " + token);
+           int userId = userService.saveUser(userDTO);
+           if (userId == 0) {
+               throw new RuntimeException("User registration failed");
+           }
+           // Generate token using email
+           String token = jwtUtil.generateToken(authRequest.getEmail());
+           System.out.println("Token: " + token);
 
-        // Return the token and a message
-        return new AuthResponse(token, "User registered successfully with ID: " + userId);
+           // Return the token and a message
+           return new AuthResponse(token, "User registered successfully with ID: " + userId);
+
+       }catch (Exception e){
+           System.out.println("Exception occurred: " + e.getMessage());
+           throw new RuntimeException("Registration failed");
+       }
     }
 
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest authRequest) {
-        // Generate token using email
-        String token = jwtUtil.generateToken(authRequest.getEmail());
-        System.out.println("Token: " + token);
+        try {
+            // Authenticate the user
+            authenticationManager.authenticate(new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
+            String token = jwtUtil.generateToken(authRequest.getEmail());
+            System.out.println("Token: " + token);
 
-        // Return the token and a message
-        return new AuthResponse(token, "User logged in successfully");
+            return new AuthResponse(token, "Login successful");
+
+        }catch (Exception e){
+            System.out.println("Exception occurred: " + e.getMessage());
+            throw new RuntimeException("Login failed");
+        }
     }
 }
